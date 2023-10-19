@@ -1,0 +1,1 @@
+Os links em notação markdown devem estar dispostos da seguinte maneira: [Github](https://api.github.com/users/GustGodoi).
