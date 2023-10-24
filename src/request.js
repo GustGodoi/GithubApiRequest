@@ -1,22 +1,25 @@
 // Requisita o Github
+export default async function executaRequisicaoGithub(linkRequest) {
 
-import fs from 'fs';
-import chalk from 'chalk';
-import pegaArquivo from './index.js';
-import fs, { lstat, lstatSync } from 'fs';
+    console.log('linkRequest', linkRequest)
+    const resultadoRequest = await Promise
+        .all(
+            linkRequest.map(async (url) => {
+                try {
+                    const response = await fetch(url);
+                    return response.json();
+                } catch (error) {
+                    return manejaErros(error);
+                }
+        })
+    )
+    return resultadoRequest;
+}
 
-const caminho = process.argv;
-
-// function trataErro(error) {
-//     throw new Error(chalk.red(error.code, 'Erro da requisição.'));
-// }
-
-// async function executaRequisicaoGithub(linkRequest) {
-//     dadosUsuarioFormatados = await fetch(linkRequest)
-//      .then((res) => res.json())
-//      .catch((error) => trataErro(error));
-
-//     console.log(chalk.green(dadosUsuarioFormatados));
-// }
-
-// executaRequisicaoGithub(linkRequest);
+function manejaErros(error) {
+    if (error.cause.code === 'ENOTFOUND') {
+        return 'link não encontrado.';
+    } else {
+        return 'Ocorreu algum erro na chamada.';
+    }
+}
